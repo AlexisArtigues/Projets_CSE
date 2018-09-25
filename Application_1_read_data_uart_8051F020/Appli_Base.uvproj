@@ -379,6 +379,11 @@
               <FileType>1</FileType>
               <FilePath>.\init.c</FilePath>
             </File>
+            <File>
+              <FileName>Asm_8051_Lib.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\Asm_8051_Lib.asm</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

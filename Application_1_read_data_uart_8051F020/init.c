@@ -38,6 +38,19 @@ void Init_Device(void)
     Oscillator_Init();
 		PortIO_Init();
 		P1MDOUT |= 0x40; // Met la sortie 6 en sortie
+		Init_UART0();
+}
+
+void Init_UART0(void){
+	CKCON |= 0x10;
+	TCON |= 0x40;
+	TMOD |= 0x20;
+	TMOD &= ~ 0xD0;
+	SCON0 |= 0x72;
+	SCON0 &= ~ 0x81;
+	T2CON &= ~ 0x30;
+  PCON |= 0x80;
+	TH1 = 111;
 }
 
 void PortIO_Init(void){
