@@ -1,0 +1,197 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        09/25/2018  15:06:45  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+C:\KEIL_V5\C51\BIN\BL51.EXE STARTUP.obj, main.obj, init.obj TO Executable RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  main.obj (MAIN)
+  init.obj (INIT)
+
+
+LINK MAP OF MODULE:  Executable (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     07FDH                  *** GAP ***
+            CODE    0800H     001AH     UNIT         ?PR?OSCILLATOR_INIT?INIT
+            CODE    081AH     000DH     UNIT         ?PR?INIT_DEVICE?INIT
+            CODE    0827H     000CH     UNIT         ?C_C51STARTUP
+            CODE    0833H     000AH     UNIT         ?PR?PORTIO_INIT?INIT
+            CODE    083DH     0008H     UNIT         ?PR?MAIN?MAIN
+            CODE    0845H     0007H     UNIT         ?PR?RESET_SOURCES_INIT?INIT
+
+
+
+OVERLAY MAP OF MODULE:   Executable (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN
+  +--> ?PR?INIT_DEVICE?INIT
+
+?PR?INIT_DEVICE?INIT
+  +--> ?PR?RESET_SOURCES_INIT?INIT
+  +--> ?PR?OSCILLATOR_INIT?INIT
+  +--> ?PR?PORTIO_INIT?INIT
+
+
+
+SYMBOL TABLE OF MODULE:  Executable (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/25/2018  15:06:45  PAGE 2
+
+
+
+  -------         MODULE        ?C_STARTUP
+  C:0827H         SEGMENT       ?C_C51STARTUP
+  I:0008H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:082AH         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:0827H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:0827H         LINE#         133
+  C:0829H         LINE#         134
+  C:082AH         LINE#         135
+  C:082BH         LINE#         136
+  C:082DH         LINE#         185
+  C:0830H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00E8H         PUBLIC        ADC0CN
+  D:00A8H         PUBLIC        IE
+  D:00D8H         PUBLIC        PCA0CN
+  D:00B8H         PUBLIC        IP
+  D:00C0H         PUBLIC        SMB0CN
+  C:083DH         PUBLIC        main
+  D:00F8H         PUBLIC        SPI0CN
+  D:0088H         PUBLIC        TCON
+  D:0098H         PUBLIC        SCON0
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          MAIN
+  C:083DH         LINE#         28
+  C:083DH         LINE#         29
+  C:083DH         LINE#         31
+  C:0840H         LINE#         33
+  C:0843H         LINE#         34
+  C:0843H         LINE#         35
+  C:0843H         LINE#         37
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/25/2018  15:06:45  PAGE 3
+
+
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        INIT
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00FFH         PUBLIC        WDTCN
+  D:00E8H         PUBLIC        ADC0CN
+  D:00A5H         PUBLIC        P1MDOUT
+  D:00A8H         PUBLIC        IE
+  D:00D8H         PUBLIC        PCA0CN
+  D:00B8H         PUBLIC        IP
+  C:0800H         PUBLIC        Oscillator_Init
+  D:00E1H         PUBLIC        XBR0
+  D:00E2H         PUBLIC        XBR1
+  D:00E3H         PUBLIC        XBR2
+  D:00C0H         PUBLIC        SMB0CN
+  D:00F8H         PUBLIC        SPI0CN
+  D:0088H         PUBLIC        TCON
+  C:0833H         PUBLIC        PortIO_Init
+  D:00B2H         PUBLIC        OSCICN
+  C:0845H         PUBLIC        Reset_Sources_Init
+  C:081AH         PUBLIC        Init_Device
+  D:00B1H         PUBLIC        OSCXCN
+  D:0098H         PUBLIC        SCON0
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          RESET_SOURCES_INIT
+  C:0845H         LINE#         12
+  C:0845H         LINE#         13
+  C:0845H         LINE#         14
+  C:0848H         LINE#         15
+  C:084BH         LINE#         16
+  -------         ENDPROC       RESET_SOURCES_INIT
+  -------         PROC          OSCILLATOR_INIT
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0800H         LINE#         21
+  C:0800H         LINE#         22
+  C:0800H         LINE#         23
+  C:0803H         LINE#         24
+  C:0806H         LINE#         25
+  C:0811H         LINE#         26
+  C:0816H         LINE#         27
+  C:0819H         LINE#         28
+  -------         ENDPROC       OSCILLATOR_INIT
+  -------         PROC          INIT_DEVICE
+  C:081AH         LINE#         35
+  C:081AH         LINE#         36
+  C:081AH         LINE#         37
+  C:081DH         LINE#         38
+  C:0820H         LINE#         39
+  C:0823H         LINE#         40
+  C:0826H         LINE#         41
+  -------         ENDPROC       INIT_DEVICE
+  -------         PROC          PORTIO_INIT
+  C:0833H         LINE#         43
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/25/2018  15:06:45  PAGE 4
+
+
+  C:0833H         LINE#         80
+  C:0836H         LINE#         81
+  C:0839H         LINE#         82
+  C:083CH         LINE#         83
+  -------         ENDPROC       PORTIO_INIT
+  -------         ENDMOD        INIT
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 004FH BYTE ( 3%) *
+******************************************************************************
+
+Program Size: data=9.0 xdata=0 code=79
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
