@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   INIT                                                              09/25/2018 16:14:11 PAGE 1   
+C51 COMPILER V9.56.0.0   INIT                                                              09/28/2018 14:09:08 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE INIT
@@ -16,7 +16,7 @@ line level    source
    7          // Called from the Init_Device() function
    8          
    9          //-----------------------------------------------------------------------------
-  10          // Dévalidation du watchdog
+  10          // Dï¿½validation du watchdog
   11          //-----------------------------------------------------------------------------
   12          void Reset_Sources_Init()
   13          {
@@ -39,15 +39,15 @@ line level    source
   30          
   31          
   32          //-----------------------------------------------------------------------------
-  33          // Initialisation globale du Microcontrôleur - 
+  33          // Initialisation globale du Microcontrï¿½leur - 
   34          //-----------------------------------------------------------------------------
   35          void Init_Device(void)
   36          {
   37   1          Reset_Sources_Init();
   38   1          Oscillator_Init();
-  39   1          PortIO_Init();
-  40   1          P1MDOUT |= 0x40; // Met la sortie 6 en sortie
-  41   1          Init_UART0();
+  39   1        PortIO_Init();
+  40   1        P1MDOUT |= 0x40; // Met la sortie 6 en sortie
+  41   1        Init_UART0();
   42   1      }
   43          
   44          void Init_UART0(void){
@@ -62,7 +62,7 @@ line level    source
   53   1        TH1 = 111;
   54   1      }
   55          
-C51 COMPILER V9.56.0.0   INIT                                                              09/25/2018 16:14:11 PAGE 2   
+C51 COMPILER V9.56.0.0   INIT                                                              09/28/2018 14:09:08 PAGE 2   
 
   56          void PortIO_Init(void){
   57   1            // P0.0  -  TX0 (UART0), Open-Drain, Digital

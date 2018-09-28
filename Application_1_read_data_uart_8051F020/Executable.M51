@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        09/25/2018  16:14:11  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        09/28/2018  14:09:09  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -13,6 +13,10 @@ INPUT MODULES INCLUDED:
   main.obj (MAIN)
   init.obj (INIT)
   Asm_8051_Lib.obj (ASM_8051_LIB)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CSTOPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?SIDIV)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?UIDIV)
 
 
 LINK MAP OF MODULE:  Executable (?C_STARTUP)
@@ -23,43 +27,80 @@ LINK MAP OF MODULE:  Executable (?C_STARTUP)
 
             * * * * * * *   D A T A   M E M O R Y   * * * * * * *
             REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
-            DATA    0008H     0001H     UNIT         _DATA_GROUP_
-            IDATA   0009H     0001H     UNIT         ?STACK
+            DATA    0008H     0044H     UNIT         _DATA_GROUP_
+            DATA    004CH     000AH     UNIT         ?DT?MAIN
+            IDATA   0056H     0001H     UNIT         ?STACK
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
                     0003H     07FDH                  *** GAP ***
-            CODE    0800H     0038H     UNIT         ?PR?MAIN?MAIN
-            CODE    0838H     0022H     UNIT         TIMER_UARTLIB
-            CODE    085AH     001CH     UNIT         ?PR?INIT_UART0?INIT
-            CODE    0876H     001AH     UNIT         ?PR?OSCILLATOR_INIT?INIT
-            CODE    0890H     000FH     UNIT         ?PR?INIT_DEVICE?INIT
-            CODE    089FH     000CH     UNIT         ?C_C51STARTUP
-            CODE    08ABH     000AH     UNIT         ?PR?PORTIO_INIT?INIT
-            CODE    08B5H     0007H     UNIT         ?PR?RESET_SOURCES_INIT?INIT
+            CODE    0800H     0129H     UNIT         ?PR?_RHT01_TEMPERATURE_HUMIDITY_PARSER?MAIN
+            CODE    0929H     00DAH     UNIT         ?C?LIB_CODE
+            CODE    0A03H     00B5H     UNIT         ?PR?MAIN?MAIN
+            CODE    0AB8H     009EH     UNIT         ?PR?_ITOA?MAIN
+            CODE    0B56H     006AH     UNIT         ?PR?_REVERSE?MAIN
+            CODE    0BC0H     0037H     UNIT         ?PR?_CLEAR_DATA_TAB?MAIN
+            CODE    0BF7H     0036H     UNIT         ?PR?_SEND_TAB_CHAR_UART0?MAIN
+            CODE    0C2DH     0027H     UNIT         ?PR?RHT01_READ_BIT_VALUE?MAIN
+            CODE    0C54H     0022H     UNIT         TIMER_UARTLIB
+            CODE    0C76H     0021H     UNIT         ?PR?RHT01_STEP2?MAIN
+            CODE    0C97H     0020H     UNIT         ?PR?_STRLEN?MAIN
+            CODE    0CB7H     001CH     UNIT         ?PR?INIT_UART0?INIT
+            CODE    0CD3H     001AH     UNIT         ?PR?OSCILLATOR_INIT?INIT
+            CODE    0CEDH     0012H     UNIT         ?PR?RHT01_STEP1?MAIN
+            CODE    0CFFH     000FH     UNIT         ?PR?INIT_DEVICE?INIT
+            CODE    0D0EH     000CH     UNIT         ?C_C51STARTUP
+            CODE    0D1AH     000AH     UNIT         ?PR?PORTIO_INIT?INIT
+            CODE    0D24H     0008H     UNIT         ?PR?_SEND_CHAR_UART0?MAIN
+            CODE    0D2CH     0007H     UNIT         ?PR?RESET_SOURCES_INIT?INIT
 
 
 
 OVERLAY MAP OF MODULE:   Executable (?C_STARTUP)
 
 
-SEGMENT                               DATA_GROUP 
-  +--> CALLED SEGMENT               START    LENGTH
----------------------------------------------------
-?C_C51STARTUP                       -----    -----
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/28/2018  14:09:09  PAGE 2
+
+
+SEGMENT                                            DATA_GROUP 
+  +--> CALLED SEGMENT                            START    LENGTH
+----------------------------------------------------------------
+?C_C51STARTUP                                    -----    -----
   +--> ?PR?MAIN?MAIN
 
-?PR?MAIN?MAIN                       0008H    0001H
+?PR?MAIN?MAIN                                    0008H    0030H
   +--> ?PR?INIT_DEVICE?INIT
+  +--> ?PR?_CLEAR_DATA_TAB?MAIN
+  +--> ?PR?RHT01_STEP1?MAIN
+  +--> ?PR?RHT01_STEP2?MAIN
+  +--> ?PR?RHT01_READ_BIT_VALUE?MAIN
+  +--> ?PR?_RHT01_TEMPERATURE_HUMIDITY_PARSE...
+  +--> ?PR?_SEND_CHAR_UART0?MAIN
+  +--> ?PR?_ITOA?MAIN
+  +--> ?PR?_SEND_TAB_CHAR_UART0?MAIN
 
-?PR?INIT_DEVICE?INIT                -----    -----
+?PR?INIT_DEVICE?INIT                             -----    -----
   +--> ?PR?RESET_SOURCES_INIT?INIT
   +--> ?PR?OSCILLATOR_INIT?INIT
   +--> ?PR?PORTIO_INIT?INIT
   +--> ?PR?INIT_UART0?INIT
 
+?PR?_CLEAR_DATA_TAB?MAIN                         0038H    0005H
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/25/2018  16:14:11  PAGE 2
+?PR?RHT01_READ_BIT_VALUE?MAIN                    0038H    0001H
+
+?PR?_RHT01_TEMPERATURE_HUMIDITY_PARSE...         0038H    0003H
+
+?PR?_ITOA?MAIN                                   0038H    0009H
+  +--> ?PR?_REVERSE?MAIN
+
+?PR?_REVERSE?MAIN                                0041H    0008H
+  +--> ?PR?_STRLEN?MAIN
+
+?PR?_STRLEN?MAIN                                 0049H    0003H
+
+?PR?_SEND_TAB_CHAR_UART0?MAIN                    0038H    0005H
+  +--> ?PR?_SEND_CHAR_UART0?MAIN
 
 
 
@@ -69,8 +110,8 @@ SYMBOL TABLE OF MODULE:  Executable (?C_STARTUP)
   ----------------------------------
 
   -------         MODULE        ?C_STARTUP
-  C:089FH         SEGMENT       ?C_C51STARTUP
-  I:0009H         SEGMENT       ?STACK
+  C:0D0EH         SEGMENT       ?C_C51STARTUP
+  I:0056H         SEGMENT       ?STACK
   C:0000H         PUBLIC        ?C_STARTUP
   D:00E0H         SYMBOL        ACC
   D:00F0H         SYMBOL        B
@@ -78,8 +119,11 @@ SYMBOL TABLE OF MODULE:  Executable (?C_STARTUP)
   D:0082H         SYMBOL        DPL
   N:0000H         SYMBOL        IBPSTACK
   N:0100H         SYMBOL        IBPSTACKTOP
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/28/2018  14:09:09  PAGE 3
+
+
   N:0080H         SYMBOL        IDATALEN
-  C:08A2H         SYMBOL        IDATALOOP
+  C:0D11H         SYMBOL        IDATALOOP
   N:0000H         SYMBOL        PBPSTACK
   N:0100H         SYMBOL        PBPSTACKTOP
   N:0000H         SYMBOL        PDATALEN
@@ -88,59 +132,271 @@ SYMBOL TABLE OF MODULE:  Executable (?C_STARTUP)
   N:0000H         SYMBOL        PPAGEENABLE
   D:00A0H         SYMBOL        PPAGE_SFR
   D:0081H         SYMBOL        SP
-  C:089FH         SYMBOL        STARTUP1
+  C:0D0EH         SYMBOL        STARTUP1
   N:0000H         SYMBOL        XBPSTACK
   N:0000H         SYMBOL        XBPSTACKTOP
   N:0000H         SYMBOL        XDATALEN
   N:0000H         SYMBOL        XDATASTART
   C:0000H         LINE#         126
-  C:089FH         LINE#         133
-  C:08A1H         LINE#         134
-  C:08A2H         LINE#         135
-  C:08A3H         LINE#         136
-  C:08A5H         LINE#         185
-  C:08A8H         LINE#         196
+  C:0D0EH         LINE#         133
+  C:0D10H         LINE#         134
+  C:0D11H         LINE#         135
+  C:0D12H         LINE#         136
+  C:0D14H         LINE#         185
+  C:0D17H         LINE#         196
   -------         ENDMOD        ?C_STARTUP
 
   -------         MODULE        MAIN
   C:0000H         SYMBOL        _ICE_DUMMY_
+  C:0B56H         PUBLIC        _reverse
   D:0090H         PUBLIC        P1
+  C:0CEDH         PUBLIC        rht01_step1
+  D:00A0H         PUBLIC        P2
+  C:0C76H         PUBLIC        rht01_step2
+  D:004CH         PUBLIC        temperture_decimal
   D:00E8H         PUBLIC        ADC0CN
+  C:0800H         PUBLIC        _rht01_temperature_humidity_parser
   D:00A8H         PUBLIC        IE
+  D:00A6H         PUBLIC        P2MDOUT
+  C:0BFDH         PUBLIC        _send_tab_char_uart0
   D:00D8H         PUBLIC        PCA0CN
   D:00B8H         PUBLIC        IP
+  C:0C97H         PUBLIC        _strlen
+  C:0BC0H         PUBLIC        _clear_data_tab
   D:00C0H         PUBLIC        SMB0CN
-  C:0800H         PUBLIC        main
+  C:0A03H         PUBLIC        main
+  D:004EH         PUBLIC        humidity_decimal
+  D:0050H         PUBLIC        humidity_integral
+  C:0AB8H         PUBLIC        _itoa
   D:00F8H         PUBLIC        SPI0CN
   D:0088H         PUBLIC        TCON
-  B:0090H.6       PUBLIC        LED
+  B:0098H.1       PUBLIC        TI0
+  B:00A0H.6       PUBLIC        RHT01
+  C:0C2DH         PUBLIC        rht01_read_bit_value
+  D:0052H         PUBLIC        checksum
   D:0099H         PUBLIC        SBUF0
   D:0098H         PUBLIC        SCON0
   D:00C8H         PUBLIC        T2CON
+  D:0054H         PUBLIC        temperature_integral
   D:00D0H         PUBLIC        PSW
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/28/2018  14:09:09  PAGE 4
+
+
+  C:0D24H         PUBLIC        _send_char_uart0
+  -------         PROC          RHT01_STEP1
+  C:0CEDH         LINE#         43
+  C:0CEDH         LINE#         45
+  C:0CEFH         LINE#         46
+  C:0CF6H         LINE#         47
+  C:0CF8H         LINE#         48
+  -------         ENDPROC       RHT01_STEP1
+  -------         PROC          RHT01_STEP2
+  -------         DO            
+  D:0007H         SYMBOL        read_value
+  -------         ENDDO         
+  C:0C76H         LINE#         51
+  C:0C76H         LINE#         53
+  C:0C79H         LINE#         54
+  C:0C7EH         LINE#         55
+  C:0C80H         LINE#         56
+  C:0C85H         LINE#         57
+  C:0C8AH         LINE#         58
+  C:0C8CH         LINE#         59
+  C:0C8FH         LINE#         60
+  C:0C94H         LINE#         61
+  C:0C96H         LINE#         62
+  -------         ENDPROC       RHT01_STEP2
+  -------         PROC          RHT01_READ_BIT_VALUE
+  -------         DO            
+  D:0038H         SYMBOL        read_value
+  D:0007H         SYMBOL        return_value
+  -------         ENDDO         
+  C:0C2DH         LINE#         64
+  C:0C2DH         LINE#         67
+  C:0C33H         LINE#         68
+  C:0C39H         LINE#         69
+  C:0C3BH         LINE#         70
+  C:0C42H         LINE#         71
+  C:0C47H         LINE#         72
+  C:0C4BH         LINE#         73
+  C:0C51H         LINE#         74
+  C:0C53H         LINE#         75
+  C:0C53H         LINE#         76
+  -------         ENDPROC       RHT01_READ_BIT_VALUE
+  -------         PROC          _RHT01_TEMPERATURE_HUMIDITY_PARSER
+  D:0038H         SYMBOL        data_value
+  -------         DO            
+  D:0005H         SYMBOL        internal_counter
+  -------         ENDDO         
+  C:0800H         LINE#         78
+  C:0806H         LINE#         79
+  C:0808H         LINE#         80
+  C:080CH         LINE#         81
+  C:0810H         LINE#         82
+  C:0814H         LINE#         83
+  C:0818H         LINE#         84
+  C:081CH         LINE#         85
+  C:081CH         LINE#         86
+  C:083DH         LINE#         87
+  C:0848H         LINE#         88
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/28/2018  14:09:09  PAGE 5
+
+
+  C:0849H         LINE#         89
+  C:084CH         LINE#         90
+  C:0854H         LINE#         91
+  C:0875H         LINE#         92
+  C:0880H         LINE#         93
+  C:0881H         LINE#         94
+  C:0883H         LINE#         95
+  C:088BH         LINE#         96
+  C:08ACH         LINE#         97
+  C:08B7H         LINE#         98
+  C:08B8H         LINE#         99
+  C:08BAH         LINE#         101
+  C:08C2H         LINE#         102
+  C:08E3H         LINE#         103
+  C:08EEH         LINE#         104
+  C:08EFH         LINE#         105
+  C:08F1H         LINE#         106
+  C:08F9H         LINE#         107
+  C:091AH         LINE#         108
+  C:0925H         LINE#         109
+  C:0926H         LINE#         110
+  C:0928H         LINE#         112
+  -------         ENDPROC       _RHT01_TEMPERATURE_HUMIDITY_PARSER
+  -------         PROC          _REVERSE
+  D:0041H         SYMBOL        s
+  -------         DO            
+  D:0044H         SYMBOL        i
+  D:0046H         SYMBOL        j
+  D:0048H         SYMBOL        c
+  -------         ENDDO         
+  C:0B56H         LINE#         115
+  C:0B5CH         LINE#         116
+  C:0B5CH         LINE#         119
+  C:0B7FH         LINE#         120
+  C:0B90H         LINE#         121
+  C:0BA2H         LINE#         122
+  C:0BADH         LINE#         123
+  C:0BBFH         LINE#         124
+  -------         ENDPROC       _REVERSE
+  -------         PROC          _ITOA
+  D:0038H         SYMBOL        n
+  D:003AH         SYMBOL        s
+  -------         DO            
+  D:003DH         SYMBOL        i
+  D:003FH         SYMBOL        sign
+  -------         ENDDO         
+  C:0AB8H         LINE#         127
+  C:0AC2H         LINE#         128
+  C:0AC2H         LINE#         130
+  C:0ACEH         LINE#         131
+  C:0AD9H         LINE#         132
+  C:0ADEH         LINE#         133
+  C:0ADEH         LINE#         134
+  C:0B06H         LINE#         135
+  C:0B20H         LINE#         136
+  C:0B29H         LINE#         137
+  C:0B43H         LINE#         138
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/28/2018  14:09:09  PAGE 6
+
+
+  C:0B53H         LINE#         139
+  -------         ENDPROC       _ITOA
+  -------         PROC          _STRLEN
+  D:0049H         SYMBOL        str
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0C97H         LINE#         142
+  C:0C9DH         LINE#         143
+  C:0CA0H         LINE#         145
+  C:0CAFH         LINE#         146
+  C:0CB4H         LINE#         147
+  C:0CB6H         LINE#         148
+  C:0CB6H         LINE#         149
+  -------         ENDPROC       _STRLEN
+  -------         PROC          _CLEAR_DATA_TAB
+  D:0038H         SYMBOL        data_tab
+  D:003BH         SYMBOL        dim
+  -------         DO            
+  D:0007H         SYMBOL        i
+  -------         ENDDO         
+  C:0BC0H         LINE#         151
+  C:0BCAH         LINE#         152
+  C:0BCCH         LINE#         153
+  C:0BE1H         LINE#         154
+  C:0BF3H         LINE#         155
+  C:0BF6H         LINE#         156
+  -------         ENDPROC       _CLEAR_DATA_TAB
+  -------         PROC          _SEND_CHAR_UART0
+  D:0007H         SYMBOL        car
+  C:0D24H         LINE#         158
+  C:0D24H         LINE#         159
+  C:0D26H         LINE#         160
+  C:0D28H         LINE#         161
+  C:0D2BH         LINE#         162
+  -------         ENDPROC       _SEND_CHAR_UART0
+  -------         PROC          L?0062
+  -------         ENDPROC       L?0062
+  -------         PROC          _SEND_TAB_CHAR_UART0
+  D:0038H         SYMBOL        car_tab
+  D:003BH         SYMBOL        dim
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0BFDH         LINE#         164
+  C:0C07H         LINE#         165
+  C:0C09H         LINE#         166
+  C:0C17H         LINE#         167
+  C:0C29H         LINE#         168
+  C:0C2CH         LINE#         169
+  -------         ENDPROC       _SEND_TAB_CHAR_UART0
   -------         PROC          MAIN
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/25/2018  16:14:11  PAGE 3
-
-
   -------         DO            
   D:0008H         SYMBOL        i
+  D:0009H         SYMBOL        counter
+  D:000AH         SYMBOL        rth_data_buffer
+  D:0032H         SYMBOL        temp_string
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/28/2018  14:09:09  PAGE 7
+
+
+  D:0035H         SYMBOL        humidity_string
   -------         ENDDO         
-  C:0800H         LINE#         28
-  C:0800H         LINE#         29
-  C:0800H         LINE#         30
-  C:0803H         LINE#         31
-  C:0806H         LINE#         32
-  C:0809H         LINE#         33
-  C:0809H         LINE#         34
-  C:0809H         LINE#         35
-  C:080BH         LINE#         36
-  C:080EH         LINE#         37
-  C:0815H         LINE#         38
-  C:081EH         LINE#         39
-  C:0821H         LINE#         40
-  C:0823H         LINE#         41
-  C:082DH         LINE#         42
-  C:0834H         LINE#         43
+  C:0A03H         LINE#         174
+  C:0A03H         LINE#         175
+  C:0A03H         LINE#         176
+  C:0A06H         LINE#         177
+  C:0A08H         LINE#         181
+  C:0A0BH         LINE#         182
+  C:0A0EH         LINE#         183
+  C:0A0EH         LINE#         184
+  C:0A17H         LINE#         185
+  C:0A20H         LINE#         186
+  C:0A29H         LINE#         187
+  C:0A2CH         LINE#         188
+  C:0A2FH         LINE#         189
+  C:0A32H         LINE#         190
+  C:0A32H         LINE#         191
+  C:0A3CH         LINE#         192
+  C:0A3EH         LINE#         193
+  C:0A47H         LINE#         194
+  C:0A50H         LINE#         195
+  C:0A55H         LINE#         196
+  C:0A5AH         LINE#         197
+  C:0A5FH         LINE#         198
+  C:0A6CH         LINE#         199
+  C:0A73H         LINE#         200
+  C:0A78H         LINE#         201
+  C:0A7BH         LINE#         202
+  C:0A80H         LINE#         203
+  C:0A85H         LINE#         204
+  C:0A92H         LINE#         205
+  C:0A99H         LINE#         206
+  C:0A9EH         LINE#         207
+  C:0AADH         LINE#         208
+  C:0AB4H         LINE#         209
   -------         ENDPROC       MAIN
   -------         ENDMOD        MAIN
 
@@ -152,7 +408,7 @@ SYMBOL TABLE OF MODULE:  Executable (?C_STARTUP)
   D:00A8H         PUBLIC        IE
   D:00D8H         PUBLIC        PCA0CN
   D:00B8H         PUBLIC        IP
-  C:0876H         PUBLIC        Oscillator_Init
+  C:0CD3H         PUBLIC        Oscillator_Init
   D:00E1H         PUBLIC        XBR0
   D:00E2H         PUBLIC        XBR1
   D:00E3H         PUBLIC        XBR2
@@ -161,111 +417,130 @@ SYMBOL TABLE OF MODULE:  Executable (?C_STARTUP)
   D:0087H         PUBLIC        PCON
   D:0089H         PUBLIC        TMOD
   D:0088H         PUBLIC        TCON
-  C:08ABH         PUBLIC        PortIO_Init
+  C:0D1AH         PUBLIC        PortIO_Init
   D:00B2H         PUBLIC        OSCICN
-  C:08B5H         PUBLIC        Reset_Sources_Init
-  C:0890H         PUBLIC        Init_Device
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/28/2018  14:09:09  PAGE 8
+
+
+  C:0D2CH         PUBLIC        Reset_Sources_Init
+  C:0CFFH         PUBLIC        Init_Device
   D:008DH         PUBLIC        TH1
   D:00B1H         PUBLIC        OSCXCN
-  C:085AH         PUBLIC        Init_UART0
+  C:0CB7H         PUBLIC        Init_UART0
   D:0098H         PUBLIC        SCON0
   D:00C8H         PUBLIC        T2CON
   D:008EH         PUBLIC        CKCON
   D:00D0H         PUBLIC        PSW
   -------         PROC          RESET_SOURCES_INIT
-  C:08B5H         LINE#         12
-  C:08B5H         LINE#         13
-  C:08B5H         LINE#         14
-  C:08B8H         LINE#         15
-  C:08BBH         LINE#         16
+  C:0D2CH         LINE#         12
+  C:0D2CH         LINE#         13
+  C:0D2CH         LINE#         14
+  C:0D2FH         LINE#         15
+  C:0D32H         LINE#         16
   -------         ENDPROC       RESET_SOURCES_INIT
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/25/2018  16:14:11  PAGE 4
-
-
   -------         PROC          OSCILLATOR_INIT
   -------         DO            
   D:0006H         SYMBOL        i
   -------         ENDDO         
-  C:0876H         LINE#         21
-  C:0876H         LINE#         22
-  C:0876H         LINE#         23
-  C:0879H         LINE#         24
-  C:087CH         LINE#         25
-  C:0887H         LINE#         26
-  C:088CH         LINE#         27
-  C:088FH         LINE#         28
+  C:0CD3H         LINE#         21
+  C:0CD3H         LINE#         22
+  C:0CD3H         LINE#         23
+  C:0CD6H         LINE#         24
+  C:0CD9H         LINE#         25
+  C:0CE4H         LINE#         26
+  C:0CE9H         LINE#         27
+  C:0CECH         LINE#         28
   -------         ENDPROC       OSCILLATOR_INIT
   -------         PROC          INIT_DEVICE
-  C:0890H         LINE#         35
-  C:0890H         LINE#         36
-  C:0890H         LINE#         37
-  C:0893H         LINE#         38
-  C:0896H         LINE#         39
-  C:0899H         LINE#         40
-  C:089CH         LINE#         41
+  C:0CFFH         LINE#         35
+  C:0CFFH         LINE#         36
+  C:0CFFH         LINE#         37
+  C:0D02H         LINE#         38
+  C:0D05H         LINE#         39
+  C:0D08H         LINE#         40
+  C:0D0BH         LINE#         41
   -------         ENDPROC       INIT_DEVICE
   -------         PROC          INIT_UART0
-  C:085AH         LINE#         44
-  C:085AH         LINE#         45
-  C:085DH         LINE#         46
-  C:0860H         LINE#         47
-  C:0863H         LINE#         48
-  C:0866H         LINE#         49
-  C:0869H         LINE#         50
-  C:086CH         LINE#         51
-  C:086FH         LINE#         52
-  C:0872H         LINE#         53
-  C:0875H         LINE#         54
+  C:0CB7H         LINE#         44
+  C:0CB7H         LINE#         45
+  C:0CBAH         LINE#         46
+  C:0CBDH         LINE#         47
+  C:0CC0H         LINE#         48
+  C:0CC3H         LINE#         49
+  C:0CC6H         LINE#         50
+  C:0CC9H         LINE#         51
+  C:0CCCH         LINE#         52
+  C:0CCFH         LINE#         53
+  C:0CD2H         LINE#         54
   -------         ENDPROC       INIT_UART0
   -------         PROC          PORTIO_INIT
-  C:08ABH         LINE#         56
-  C:08ABH         LINE#         93
-  C:08AEH         LINE#         94
-  C:08B1H         LINE#         95
-  C:08B4H         LINE#         96
+  C:0D1AH         LINE#         56
+  C:0D1AH         LINE#         93
+  C:0D1DH         LINE#         94
+  C:0D20H         LINE#         95
+  C:0D23H         LINE#         96
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/28/2018  14:09:09  PAGE 9
+
+
   -------         ENDPROC       PORTIO_INIT
   -------         ENDMOD        INIT
 
   -------         MODULE        ASM_8051_LIB
-  C:0838H         SEGMENT       TIMER_UARTLIB
-  C:0838H         PUBLIC        _FCT_TEMPO
-  C:0842H         SYMBOL        ?C0001
-  C:084DH         SYMBOL        ?C0003
-  C:0853H         SYMBOL        ?C0005
-  C:0842H         SYMBOL        ?C0006
-  C:084BH         SYMBOL        ?C0007
+  C:0C54H         SEGMENT       TIMER_UARTLIB
+  C:0C54H         PUBLIC        _FCT_TEMPO
+  C:0C5EH         SYMBOL        ?C0001
+  C:0C69H         SYMBOL        ?C0003
+  C:0C6FH         SYMBOL        ?C0005
+  C:0C5EH         SYMBOL        ?C0006
+  C:0C67H         SYMBOL        ?C0007
   D:00E0H         SYMBOL        ACC
-  C:0838H         LINE#         44
-  C:083AH         LINE#         45
-  C:083BH         LINE#         46
-  C:083DH         LINE#         47
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/25/2018  16:14:11  PAGE 5
-
-
-  C:083EH         LINE#         48
-  C:083FH         LINE#         49
-  C:0841H         LINE#         50
-  C:0842H         LINE#         53
-  C:0843H         LINE#         54
-  C:0844H         LINE#         55
-  C:0846H         LINE#         57
-  C:0847H         LINE#         58
-  C:0848H         LINE#         59
-  C:084AH         LINE#         60
-  C:084BH         LINE#         62
-  C:084DH         LINE#         64
-  C:084EH         LINE#         65
-  C:0850H         LINE#         66
-  C:0851H         LINE#         67
-  C:0853H         LINE#         69
-  C:0855H         LINE#         70
-  C:0857H         LINE#         71
-  C:0859H         LINE#         72
+  C:0C54H         LINE#         44
+  C:0C56H         LINE#         45
+  C:0C57H         LINE#         46
+  C:0C59H         LINE#         47
+  C:0C5AH         LINE#         48
+  C:0C5BH         LINE#         49
+  C:0C5DH         LINE#         50
+  C:0C5EH         LINE#         53
+  C:0C5FH         LINE#         54
+  C:0C60H         LINE#         55
+  C:0C62H         LINE#         57
+  C:0C63H         LINE#         58
+  C:0C64H         LINE#         59
+  C:0C66H         LINE#         60
+  C:0C67H         LINE#         62
+  C:0C69H         LINE#         64
+  C:0C6AH         LINE#         65
+  C:0C6CH         LINE#         66
+  C:0C6DH         LINE#         67
+  C:0C6FH         LINE#         69
+  C:0C71H         LINE#         70
+  C:0C73H         LINE#         71
+  C:0C75H         LINE#         72
   -------         ENDMOD        ASM_8051_LIB
 
+  -------         MODULE        ?C?CLDOPTR
+  C:0929H         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?CSTOPTR
+  C:0956H         PUBLIC        ?C?CSTOPTR
+  -------         ENDMOD        ?C?CSTOPTR
+
+  -------         MODULE        ?C?SIDIV
+  C:0978H         PUBLIC        ?C?SIDIV
+  -------         ENDMOD        ?C?SIDIV
+
+  -------         MODULE        ?C?UIDIV
+  C:09AEH         PUBLIC        ?C?UIDIV
+  -------         ENDMOD        ?C?UIDIV
+
 ******************************************************************************
-* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 00BFH BYTE ( 9%) *
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 045CH BYTE (54%) *
 ******************************************************************************
 
-Program Size: data=10.0 xdata=0 code=191
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/28/2018  14:09:09  PAGE 10
+
+
+Program Size: data=87.0 xdata=0 code=1334
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

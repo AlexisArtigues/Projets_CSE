@@ -7,7 +7,7 @@
 // Called from the Init_Device() function
 
 //-----------------------------------------------------------------------------
-// Dévalidation du watchdog
+// Dï¿½validation du watchdog
 //-----------------------------------------------------------------------------
 void Reset_Sources_Init()
 {
@@ -30,15 +30,15 @@ void Oscillator_Init()
 
 
 //-----------------------------------------------------------------------------
-// Initialisation globale du Microcontrôleur - 
+// Initialisation globale du Microcontrï¿½leur - 
 //-----------------------------------------------------------------------------
 void Init_Device(void)
 {
     Reset_Sources_Init();
     Oscillator_Init();
-		PortIO_Init();
-		P1MDOUT |= 0x40; // Met la sortie 6 en sortie
-		Init_UART0();
+	PortIO_Init();
+	P1MDOUT |= 0x40; // Met la sortie 6 en sortie
+	Init_UART0();
 }
 
 void Init_UART0(void){
