@@ -83,29 +83,29 @@ void rht01_temperature_humidity_parser(char data_value[40]){
 	temperture_decimal = 0;
 	checksum = 0;
 	while (internal_counter<8){
-		humidity_integral += data_value[internal_counter]; 
 		humidity_integral <<= 1;
+		humidity_integral += data_value[internal_counter]; 
 		internal_counter++;
 	}
 	while (internal_counter<16){
-		humidity_decimal += data_value[internal_counter]; 
 		humidity_decimal <<= 1;
+		humidity_decimal += data_value[internal_counter]; 
 		internal_counter++;
 	}
 	while (internal_counter<24){
-		temperature_integral += data_value[internal_counter]; 
 		temperature_integral <<= 1;
+		temperature_integral += data_value[internal_counter]; 
 		internal_counter++;
 	}
  
 	while (internal_counter<32){
-		temperture_decimal += data_value[internal_counter];
 		temperture_decimal <<= 1;
+		temperture_decimal += data_value[internal_counter];
 		internal_counter++;
 	}
 	while (internal_counter<40){
-		checksum += data_value[internal_counter];
 		checksum <<=1;
+		checksum += data_value[internal_counter];
 		internal_counter++;
 	}
 
@@ -198,8 +198,9 @@ void main (void)
 		 itoa(temperature_integral,temp_string);
 		 send_tab_char_uart0(temp_string,3);
 		 send_char_uart0(' ');
-		 send_char_uart0('H');
 		 send_char_uart0('-');
+		 send_char_uart0(' ');
+		 send_char_uart0('H');
 		 send_char_uart0(' ');
 		 send_char_uart0(':');
 		 itoa(humidity_integral,humidity_string);

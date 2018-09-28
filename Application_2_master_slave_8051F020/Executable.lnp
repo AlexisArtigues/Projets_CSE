@@ -1,0 +1,6 @@
+"STARTUP.obj",
+"main.obj",
+"init.obj",
+"Asm_8051_Lib.obj" 
+TO "Executable" 
+RAMSIZE(256) 

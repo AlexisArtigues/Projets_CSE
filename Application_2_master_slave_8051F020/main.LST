@@ -1,0 +1,141 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              09/28/2018 17:58:09 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          //------------------------------------------------------------------------------------
+   2          // Base_8051
+   3          //------------------------------------------------------------------------------------
+   4          //
+   5          // AUTH: DF
+   6          // DATE: 18-09-2017
+   7          // Target: C8051F020
+   8          //
+   9          // Tool chain: KEIL UV4
+  10          //
+  11          // Application de base qui configure seulement l'oscillateur et le watchdog
+  12          //-------------------------------------------------------------------------
+  13          // Includes
+  14          //------------------------------------------------------------------------------------
+  15          #include "c8051f020.h" // SFR declarations
+  16          #include <intrins.h>  
+  17          #include <stdio.h>
+  18          #include "init.h"
+  19          
+  20          #define MASTER
+  21          
+  22          sbit LED = P1^6; // Led verte embarqu�e sur la carte
+  23          
+  24          sbit NSS = P2^6;
+  25          
+  26          void fct_tempo(int duree_us);
+  27          void clear_data_tab(char data_tab[],int dim);
+  28          void send_tab_char_uart0(char car_tab[],int dim);
+  29          unsigned int strlen(char *str);
+  30          void send_char_uart0(char car);
+  31          void itoa(int n, char s[]);
+  32          void Init_UART0(void);
+  33          void Init_XBar(void);
+  34          void Init_SPI(void);
+  35          void wait_one_sec(void);
+  36          
+  37          void Init_XBar(void){
+  38   1        XBR0 = 0x06;
+  39   1          XBR2 = 0x40;
+  40   1      }
+  41          
+  42          void clear_data_tab(char data_tab[],int dim){
+  43   1        char i=0;
+  44   1        for(i=0;i<dim;i++){
+  45   2          data_tab[i] = 0 ; 
+  46   2        }
+  47   1      }
+  48          void send_char_uart0(char car){
+  49   1         TI0 = 0;
+  50   1         SBUF0 = car;
+  51   1         while (!TI0);
+  52   1       }
+  53          
+  54          void send_tab_char_uart0(char car_tab[],int dim){
+  55   1        unsigned char i = 0;
+C51 COMPILER V9.56.0.0   MAIN                                                              09/28/2018 17:58:09 PAGE 2   
+
+  56   1        for(i=0;i<dim;i++){
+  57   2          send_char_uart0(car_tab[i]);
+  58   2        }
+  59   1       }
+  60          
+  61          void Init_UART0(void){
+  62   1        CKCON |= 0x10;
+  63   1        TCON |= 0x40;
+  64   1        TMOD |= 0x20;
+  65   1        TMOD &= ~ 0xD0;
+  66   1        SCON0 |= 0x72;
+  67   1        SCON0 &= ~ 0x81;
+  68   1        T2CON &= ~ 0x30;
+  69   1          PCON |= 0x80;
+  70   1        TH1 = 111;
+  71   1      }
+  72          
+  73          void Init_SPI(void){
+  74   1        SPI0CFG |= 0xC7;
+  75   1        SPI0CN &= ~0x80;
+  76   1        SPI0CKR = 0xFF;
+  77   1        #ifdef MASTER
+  78   1        SPI0CN |= 0x03;
+  79   1        P0MDOUT |= 0x14;
+  80   1        P0MDOUT &= ~0x08;
+  81   1        P2MDOUT |=0x40; 
+  82   1        NSS = 1;
+  83   1        #else
+                SPI0CN &= ~0x02;
+                SPI0CN |= 0x01;
+                P0MDOUT |= 0x04;
+                P0MDOUT &= ~0x34; 
+                #endif 
+  89   1      }
+  90          
+  91          void wait_one_sec(void){
+  92   1        unsigned char i=0;
+  93   1        for(i=0;i<100;i++){
+  94   2          fct_tempo(10000);
+  95   2        }
+  96   1      }
+  97          //------------------------------------------------------------------------------------
+  98          // MAIN Routine
+  99          //------------------------------------------------------------------------------------
+ 100          void main (void)
+ 101          {
+ 102   1        Init_Device();
+ 103   1        Init_XBar();
+ 104   1        Init_UART0();
+ 105   1        Init_SPI();
+ 106   1        while(1){
+ 107   2          SPI0DAT = 0xFF;
+ 108   2          wait_one_sec();
+ 109   2        }
+ 110   1      }
+ 111          
+ 112           
+ 113          
+ 114           
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V9.56.0.0   MAIN                                                              09/28/2018 17:58:09 PAGE 3   
+
+   CODE SIZE        =    212    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      11
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
