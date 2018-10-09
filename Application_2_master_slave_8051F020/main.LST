@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   MAIN                                                              09/28/2018 17:58:09 PAGE 1   
+C51 COMPILER V9.56.0.0   MAIN                                                              10/09/2018 15:08:10 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
@@ -26,113 +26,291 @@ line level    source
   17          #include <stdio.h>
   18          #include "init.h"
   19          
-  20          #define MASTER
+  20          //#define MASTER
   21          
   22          sbit LED = P1^6; // Led verte embarqu�e sur la carte
   23          
   24          sbit NSS = P2^6;
   25          
-  26          void fct_tempo(int duree_us);
-  27          void clear_data_tab(char data_tab[],int dim);
-  28          void send_tab_char_uart0(char car_tab[],int dim);
-  29          unsigned int strlen(char *str);
-  30          void send_char_uart0(char car);
-  31          void itoa(int n, char s[]);
-  32          void Init_UART0(void);
-  33          void Init_XBar(void);
-  34          void Init_SPI(void);
-  35          void wait_one_sec(void);
-  36          
-  37          void Init_XBar(void){
-  38   1        XBR0 = 0x06;
-  39   1          XBR2 = 0x40;
-  40   1      }
-  41          
-  42          void clear_data_tab(char data_tab[],int dim){
-  43   1        char i=0;
-  44   1        for(i=0;i<dim;i++){
-  45   2          data_tab[i] = 0 ; 
-  46   2        }
-  47   1      }
-  48          void send_char_uart0(char car){
-  49   1         TI0 = 0;
-  50   1         SBUF0 = car;
-  51   1         while (!TI0);
-  52   1       }
-  53          
-  54          void send_tab_char_uart0(char car_tab[],int dim){
-  55   1        unsigned char i = 0;
-C51 COMPILER V9.56.0.0   MAIN                                                              09/28/2018 17:58:09 PAGE 2   
+  26          sbit RHT01 = P3^6; // Led verte embarqu�e sur la carte
+  27          
+  28          void fct_tempo(int duree_us);
+  29          void clear_data_tab(char data_tab[],int dim);
+  30          void send_tab_char_uart0(char car_tab[],int dim);
+  31          unsigned int strlen(char *str);
+  32          void send_char_uart0(char car);
+  33          void Init_UART0(void);
+  34          void Init_XBar(void);
+  35          void Init_SPI(void);
+  36          void wait_one_sec(void);
+  37          void send_data_spi(char c);
+  38          void wait_500_ms(void);
+  39          void rht01_step1(void);
+  40          void rht01_step2(void);
+  41          void rht01_readvalue(void);
+  42          void reverse(char s[]);
+  43          void itoa(int n, char s[]);
+  44          
+  45          void rht01_temperature_humidity_parser(char data_value[40]);
+  46          
+  47          unsigned int humidity_integral;
+  48          unsigned int humidity_decimal;
+  49          unsigned int temperature_integral;
+  50          unsigned int temperture_decimal;
+  51          unsigned int checksum;
+  52          
+  53          void rht01_step1(void){
+  54   1        //P2MDOUT |= 0x40; // Push pull mode P2
+  55   1        RHT01 = 0;
+C51 COMPILER V9.56.0.0   MAIN                                                              10/09/2018 15:08:10 PAGE 2   
 
-  56   1        for(i=0;i<dim;i++){
-  57   2          send_char_uart0(car_tab[i]);
-  58   2        }
-  59   1       }
-  60          
-  61          void Init_UART0(void){
-  62   1        CKCON |= 0x10;
-  63   1        TCON |= 0x40;
-  64   1        TMOD |= 0x20;
-  65   1        TMOD &= ~ 0xD0;
-  66   1        SCON0 |= 0x72;
-  67   1        SCON0 &= ~ 0x81;
-  68   1        T2CON &= ~ 0x30;
-  69   1          PCON |= 0x80;
-  70   1        TH1 = 111;
-  71   1      }
-  72          
-  73          void Init_SPI(void){
-  74   1        SPI0CFG |= 0xC7;
-  75   1        SPI0CN &= ~0x80;
-  76   1        SPI0CKR = 0xFF;
-  77   1        #ifdef MASTER
-  78   1        SPI0CN |= 0x03;
-  79   1        P0MDOUT |= 0x14;
-  80   1        P0MDOUT &= ~0x08;
-  81   1        P2MDOUT |=0x40; 
-  82   1        NSS = 1;
-  83   1        #else
-                SPI0CN &= ~0x02;
-                SPI0CN |= 0x01;
-                P0MDOUT |= 0x04;
-                P0MDOUT &= ~0x34; 
-                #endif 
-  89   1      }
-  90          
-  91          void wait_one_sec(void){
-  92   1        unsigned char i=0;
-  93   1        for(i=0;i<100;i++){
-  94   2          fct_tempo(10000);
-  95   2        }
-  96   1      }
-  97          //------------------------------------------------------------------------------------
-  98          // MAIN Routine
-  99          //------------------------------------------------------------------------------------
- 100          void main (void)
- 101          {
- 102   1        Init_Device();
- 103   1        Init_XBar();
- 104   1        Init_UART0();
- 105   1        Init_SPI();
- 106   1        while(1){
- 107   2          SPI0DAT = 0xFF;
- 108   2          wait_one_sec();
+  56   1        fct_tempo(30000);
+  57   1        RHT01 = 1;
+  58   1        fct_tempo(20);
+  59   1      }
+  60           
+  61          void rht01_step2(void){
+  62   1         char read_value;
+  63   1        while(read_value != 0){ // Att passage a 0
+  64   2          read_value = RHT01;
+  65   2        }
+  66   1        while(read_value != 1){ // Att passage a 1
+  67   2          read_value = RHT01;
+  68   2        }
+  69   1        while(read_value != 0){ // Att passage a 0
+  70   2          read_value = RHT01;
+  71   2        }
+  72   1      }
+  73          
+  74          char rht01_read_bit_value(void){
+  75   1        char read_value;
+  76   1        char return_value;
+  77   1        while(read_value != 1){ // Att passage a 1
+  78   2          read_value = RHT01;
+  79   2        }
+  80   1        fct_tempo(50); 
+  81   1        return_value = RHT01;
+  82   1        while(read_value != 0){ // Att passage a 0
+  83   2          read_value = RHT01;
+  84   2        }
+  85   1        return return_value;
+  86   1      }
+  87          
+  88          void rht01_temperature_humidity_parser(char data_value[40]){
+  89   1        char internal_counter = 0;
+  90   1        humidity_integral =0;
+  91   1        humidity_decimal = 0;
+  92   1        temperature_integral = 0;
+  93   1        temperture_decimal = 0;
+  94   1        checksum = 0;
+  95   1        while (internal_counter<8){
+  96   2          humidity_integral <<= 1;
+  97   2          humidity_integral += data_value[internal_counter]; 
+  98   2          internal_counter++;
+  99   2        }
+ 100   1        while (internal_counter<16){
+ 101   2          humidity_decimal <<= 1;
+ 102   2          humidity_decimal += data_value[internal_counter]; 
+ 103   2          internal_counter++;
+ 104   2        }
+ 105   1        while (internal_counter<24){
+ 106   2          temperature_integral <<= 1;
+ 107   2          temperature_integral += data_value[internal_counter]; 
+ 108   2          internal_counter++;
  109   2        }
- 110   1      }
- 111          
- 112           
- 113          
- 114           
+ 110   1       
+ 111   1        while (internal_counter<32){
+ 112   2          temperture_decimal <<= 1;
+ 113   2          temperture_decimal += data_value[internal_counter];
+ 114   2          internal_counter++;
+ 115   2        }
+ 116   1        while (internal_counter<40){
+ 117   2          checksum <<=1;
+C51 COMPILER V9.56.0.0   MAIN                                                              10/09/2018 15:08:10 PAGE 3   
+
+ 118   2          checksum += data_value[internal_counter];
+ 119   2          internal_counter++;
+ 120   2        }
+ 121   1      
+ 122   1      }
+ 123          
+ 124          /* reverse:  reverse string s in place */
+ 125           void reverse(char s[])
+ 126           {
+ 127   1           int i, j;
+ 128   1           char c;
+ 129   1           for (i = 0, j = strlen(s)-1; i<j; i++, j--) {
+ 130   2               c = s[i];
+ 131   2               s[i] = s[j];
+ 132   2               s[j] = c;
+ 133   2           }
+ 134   1       }
+ 135           
+ 136           /* itoa:  convert n to characters in s */
+ 137           void itoa(int n, char s[])
+ 138           {
+ 139   1           int i, sign;
+ 140   1           if ((sign = n) < 0)  /* record sign */
+ 141   1               n = -n;          /* make n positive */
+ 142   1           i = 0;
+ 143   1           do {       /* generate digits in reverse order */
+ 144   2               s[i++] = n % 10 + '0';   /* get next digit */
+ 145   2           } while ((n /= 10) > 0);     /* delete it */
+ 146   1           if (sign < 0)
+ 147   1               s[i++] = '-';
+ 148   1           s[i] = '\0';
+ 149   1           reverse(s);
+ 150   1      }
+ 151          
+ 152          void Init_XBar(void){
+ 153   1        XBR0 = 0x06;
+ 154   1          XBR2 = 0x40;
+ 155   1      }
+ 156          
+ 157          void clear_data_tab(char data_tab[],int dim){
+ 158   1        char i=0;
+ 159   1        for(i=0;i<dim;i++){
+ 160   2          data_tab[i] = 0 ; 
+ 161   2        }
+ 162   1      }
+ 163          void send_char_uart0(char car){
+ 164   1         TI0 = 0;
+ 165   1         SBUF0 = car;
+ 166   1         while (!TI0);
+ 167   1       }
+ 168          
+ 169          void send_tab_char_uart0(char car_tab[],int dim){
+ 170   1        unsigned char i = 0;
+ 171   1        for(i=0;i<dim;i++){
+ 172   2          send_char_uart0(car_tab[i]);
+ 173   2        }
+ 174   1       }
+ 175          
+ 176          void Init_UART0(void){
+ 177   1        CKCON |= 0x10;
+ 178   1        TCON |= 0x40;
+ 179   1        TMOD |= 0x20;
+C51 COMPILER V9.56.0.0   MAIN                                                              10/09/2018 15:08:10 PAGE 4   
+
+ 180   1        TMOD &= ~ 0xD0;
+ 181   1        SCON0 |= 0x72;
+ 182   1        SCON0 &= ~ 0x81;
+ 183   1        T2CON &= ~ 0x30;
+ 184   1          PCON |= 0x80;
+ 185   1        TH1 = 111;
+ 186   1      }
+ 187          
+ 188          void Init_SPI(void){
+ 189   1        SPI0CFG |= 0xC7;
+ 190   1        SPI0CN &= ~0x80;
+ 191   1        SPI0CKR = 0xFF;
+ 192   1        #ifdef MASTER
+                SPI0CN |= 0x03;
+                P0MDOUT |= 0x14;
+                P0MDOUT &= ~0x08;
+                P2MDOUT |=0x40; 
+                NSS = 1;
+                #else
+ 199   1        SPI0CN &= ~0x02;
+ 200   1        SPI0CN |= 0x01;
+ 201   1        P0MDOUT |= 0x04;
+ 202   1        P0MDOUT &= ~0x34; 
+ 203   1        #endif 
+ 204   1      }
+ 205          
+ 206          void wait_one_sec(void){
+ 207   1        unsigned char i=0;
+ 208   1        for(i=0;i<100;i++){
+ 209   2          fct_tempo(10000);
+ 210   2        }
+ 211   1      }
+ 212          
+ 213          void wait_500_ms(void){
+ 214   1        unsigned char i=0;
+ 215   1        for(i=0;i<50;i++){
+ 216   2          fct_tempo(10000);
+ 217   2        }
+ 218   1      }
+ 219          
+ 220          void send_data_spi(char c){
+ 221   1        NSS = 0;
+ 222   1        SPI0DAT = c;
+ 223   1        while((SPI0CN & 0x80) != (0x80)){
+ 224   2          // Wait for flag to be set at 0
+ 225   2        }
+ 226   1        SPI0CN &= ~0x80; // Reset flag
+ 227   1        NSS = 1;
+ 228   1      }
+ 229          
+ 230          void Init_RTH01(void){
+ 231   1        P3MDOUT &= ~0x40;
+ 232   1      }
+ 233          
+ 234          //------------------------------------------------------------------------------------
+ 235          // MAIN Routine
+ 236          //------------------------------------------------------------------------------------
+ 237          void main (void)
+ 238          {
+ 239   1        #ifdef MASTER
+                char i = 0;
+                char counter = 0;
+C51 COMPILER V9.56.0.0   MAIN                                                              10/09/2018 15:08:10 PAGE 5   
+
+                char rth_data_buffer[40];
+                char humidity_string[3];
+                #endif
+ 245   1        char temp_string[3];
+ 246   1        Init_Device();
+ 247   1        Init_XBar();
+ 248   1        Init_SPI();
+ 249   1        #ifdef MASTER
+                Init_RTH01();
+                while(1){
+                  clear_data_tab(rth_data_buffer,40);
+                  clear_data_tab(temp_string,3);
+                  clear_data_tab(humidity_string,3);
+                  rht01_step1();
+                  rht01_step2();
+                   counter = 0;
+                   while(counter<40){
+                    rth_data_buffer[counter] = rht01_read_bit_value();
+                    counter ++;
+                   }
+                  rht01_temperature_humidity_parser(rth_data_buffer);
+                  send_data_spi(temperature_integral);
+                  //send_data_spi(humidity_integral);
+                  wait_one_sec();
+                }
+                #else
+ 268   1        Init_UART0();
+ 269   1        //P1MDOUT |= 0x40; // Met la sortie 6 en sortie
+ 270   1        while(1){
+ 271   2          if((SPI0CN & 0x80) == (0x80)){
+ 272   3           temperature_integral = SPI0DAT;
+ 273   3           send_char_uart0('T');
+ 274   3           send_char_uart0(':');
+ 275   3           send_char_uart0(' ');
+ 276   3           itoa(temperature_integral,temp_string);
+ 277   3           send_tab_char_uart0(temp_string,3);
+ 278   3           send_char_uart0('\r');
+ 279   3           send_char_uart0('\n');
+ 280   3          } 
+ 281   2        }
+ 282   1        #endif
+ 283   1      
+ 284   1      }
+ 285          
+ 286           
+ 287          
+ 288           
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-C51 COMPILER V9.56.0.0   MAIN                                                              09/28/2018 17:58:09 PAGE 3   
-
-   CODE SIZE        =    212    ----
+   CODE SIZE        =    959    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----      11
+   DATA SIZE        =     10      36
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
