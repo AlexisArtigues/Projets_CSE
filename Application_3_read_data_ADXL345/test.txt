@@ -1,0 +1,9 @@
+ - Init SPI :
+    - SCK :  5 Mhz
+    - Clock Polarity : 1 
+    - Clock Phase : 1
+
+
+- Init ADXL : 
+    - Sequence INIT
+    - Clearing the SPI bit in the DATA_FORMAT register (Address 0x31) => Register 0x31 and D6

@@ -1,0 +1,183 @@
+A51 MACRO ASSEMBLER  ASM_8051_LIB                                                         10/10/2018 10:31:13 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.5.0
+OBJECT MODULE PLACED IN Asm_8051_Lib.OBJ
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE Asm_8051_Lib.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ;******************************************************************************
+
+                       2     ;ASM8051_Lib.asm
+
+                       3     
+
+                       4     ;   Ce fichier contient des routines Assembleur utiles au TP Microcontrôleur
+
+                       5     ;   Aucune modification n'est nécessaire.
+
+                       6     ;   Il suffit d'ajouter ce fichier à votre Projet
+
+                       7     ;   TARGET MCU  :  C8051F020 
+
+                       8     
+
+                       9     ;******************************************************************************
+
+                      10     
+
+                      11     
+
+                      12     ;******************************************************************************
+
+                      13     ;Declaration des variables et fonctions publiques
+
+                      14     ;******************************************************************************
+
+                      15     
+
+                      16     PUBLIC _fct_tempo
+
+                      17     
+
+                      18     ;******************************************************************************
+
+                      19     ;Consignes de segmentation
+
+                      20     ;******************************************************************************
+
+                      21     
+
+                      22     Timer_UartLib     segment  CODE
+
+                      23     
+
+----                  24                    rseg     Timer_UartLib  ; Switch to this code segment.
+
+                      25                    using    0              ; Specify register bank for the following
+
+                      26                                            ; program code.
+
+                      27     
+
+                      28     ;******************************************************************************
+
+                      29     ;******************************************************************************
+
+                      30     ; __tempo
+
+                      31     ;
+
+                      32     ; Description: Sous-programme produisant une temporisation logicielle
+
+                      33     ;              paramétrable par la variable csg_tempo.
+
+                      34     ;              La temporisation générée est égale à csg_tempo micro-secondes.
+
+                      35     ;              ATTENTION: csg_tempo ne doit pas être inférieure à 2
+
+                      36     ;
+
+                      37     ; Paramètres d'entrée:  csg_tempo dans R6(MSB) et R7(LSB)
+
+                      38     ; Paramètres de sortie: aucun
+
+                      39     ; Registres modifiés: R6 et R7
+
+                      40     ; Pile: 2 octets (sauf pour l'appel de la sous-routine)
+
+                      41     ;******************************************************************************
+
+                      42     
+
+0000                  43     _fct_tempo:
+
+0000 C0E0             44              PUSH  ACC
+
+0002 ED               45              MOV   A,R5
+
+0003 C0E0             46              PUSH  ACC
+
+0005 EF               47              MOV   A,R7
+
+0006 1F               48              DEC   R7
+
+0007 7001             49              JNZ   ?C0006
+
+0009 1E               50              DEC   R6
+
+000A                  51     ?C0006:
+
+000A                  52     ?C0001:
+
+000A EF               53              MOV   A,R7
+
+000B 4E               54              ORL   A,R6
+
+000C 600D             55              JZ    ?C0005
+
+                      56     
+
+000E EF               57              MOV   A,R7
+
+000F 1F               58              DEC   R7
+
+A51 MACRO ASSEMBLER  ASM_8051_LIB                                                         10/10/2018 10:31:13 PAGE     2
+
+0010 7001             59              JNZ   ?C0007
+
+0012 1E               60              DEC   R6
+
+0013                  61     ?C0007:
+
+0013 7D01             62              MOV   R5,#01H
+
+0015                  63     ?C0003:
+
+0015 ED               64              MOV   A,R5
+
+0016 60F2             65              JZ    ?C0001
+
+0018 1D               66              DEC   R5
+
+0019 80FA             67              SJMP  ?C0003
+
+001B                  68     ?C0005:
+
+001B D0E0             69              POP   ACC
+
+001D ADE0             70              MOV   R5,ACC
+
+001F D0E0             71              POP   ACC
+
+0021 22               72              RET
+
+                      73     ;******************************************************************************
+
+                      74     
+
+                      75     end
+
+A51 MACRO ASSEMBLER  ASM_8051_LIB                                                         10/10/2018 10:31:13 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+?C0001 . . . . . .  C ADDR   000AH   R   SEG=TIMER_UARTLIB
+?C0003 . . . . . .  C ADDR   0015H   R   SEG=TIMER_UARTLIB
+?C0005 . . . . . .  C ADDR   001BH   R   SEG=TIMER_UARTLIB
+?C0006 . . . . . .  C ADDR   000AH   R   SEG=TIMER_UARTLIB
+?C0007 . . . . . .  C ADDR   0013H   R   SEG=TIMER_UARTLIB
+ACC. . . . . . . .  D ADDR   00E0H   A   
+TIMER_UARTLIB. . .  C SEG    0022H       REL=UNIT
+_FCT_TEMPO . . . .  C ADDR   0000H   R   SEG=TIMER_UARTLIB
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
