@@ -35,7 +35,7 @@ sbit RHT01 = P3^6; // Led verte embarqu�e sur la carte
 
 void fct_tempo(int duree_us);
 void clear_data_tab(char data_tab[],int dim);
-void send_tab_char_uart0(char car_tab[],int dim);
+void send_tab_char_uart0(char car_tab[]);
 unsigned int strlen(char *str);
 void send_char_uart0(char car);
 void Init_UART0(void);
@@ -96,10 +96,11 @@ void send_char_uart0(char car){
 	 while (!TI0);
  }
 
-void send_tab_char_uart0(char car_tab[],int dim){
-	unsigned char i = 0;
-	for(i=0;i<dim;i++){
+void send_tab_char_uart0(char car_tab[]){
+	unsigned char i=0;
+	while(car_tab[i]!=0){
 		send_char_uart0(car_tab[i]);
+		i++;
 	}
  }
 
@@ -291,17 +292,17 @@ void main (void)
 		itoa(y,data_y_string);
 		itoa(z,data_z_string);
 
-		send_tab_char_uart0(data_x_string,3);
+		send_tab_char_uart0(data_x_string);
 		send_char_uart0(' ');
 		send_char_uart0('-');
 		send_char_uart0(' ');
 
-		send_tab_char_uart0(data_y_string,3);
+		send_tab_char_uart0(data_y_string);
 		send_char_uart0(' ');
 		send_char_uart0('-');
 		send_char_uart0(' ');
 
-		send_tab_char_uart0(data_z_string,3);
+		send_tab_char_uart0(data_z_string);
 
 		send_char_uart0('\r');
 		send_char_uart0('\n');

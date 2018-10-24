@@ -126,42 +126,59 @@
           <Name>-S1 -B115200 -O1793 -J0 -K0 -L0 -M0 -A3 -P1 -T0 -UEC30001177B</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>294</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>-16774665</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>MAIN.C</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+      </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>data_x0,0x0A</ItemText>
+          <ItemText>SPI0DAT,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>data_x1,0x0A</ItemText>
+          <ItemText>x,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>data_y0,0x0A</ItemText>
+          <ItemText>y,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>data_y1,0x0A</ItemText>
+          <ItemText>z,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>data_z0,0x0A</ItemText>
+          <ItemText>data_axdl,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>data_z1,0x0A</ItemText>
+          <ItemText>car_tab</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>SPI0DAT,0x0A</ItemText>
+          <ItemText>data_x_string</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

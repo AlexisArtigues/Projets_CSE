@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 10:51:03 PAGE 1   
+C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 12:00:16 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
@@ -44,7 +44,7 @@ line level    source
   35          
   36          void fct_tempo(int duree_us);
   37          void clear_data_tab(char data_tab[],int dim);
-  38          void send_tab_char_uart0(char car_tab[],int dim);
+  38          void send_tab_char_uart0(char car_tab[]);
   39          unsigned int strlen(char *str);
   40          void send_char_uart0(char car);
   41          void Init_UART0(void);
@@ -62,7 +62,7 @@ line level    source
   53          
   54          /* reverse:  reverse string s in place */
   55           void reverse(char s[])
-C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 10:51:03 PAGE 2   
+C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 12:00:16 PAGE 2   
 
   56           {
   57   1           int i, j;
@@ -107,239 +107,240 @@ line level    source
   96   1         while (!TI0);
   97   1       }
   98          
-  99          void send_tab_char_uart0(char car_tab[],int dim){
- 100   1        unsigned char i = 0;
- 101   1        for(i=0;i<dim;i++){
+  99          void send_tab_char_uart0(char car_tab[]){
+ 100   1        unsigned char i=0;
+ 101   1        while(car_tab[i]!=0){
  102   2          send_char_uart0(car_tab[i]);
- 103   2        }
- 104   1       }
- 105          
- 106          void Init_UART0(void){
- 107   1        CKCON |= 0x10;
- 108   1        TCON |= 0x40;
- 109   1        TMOD |= 0x20;
- 110   1        TMOD &= ~ 0xD0;
- 111   1        SCON0 |= 0x72;
- 112   1        SCON0 &= ~ 0x81;
- 113   1        T2CON &= ~ 0x30;
- 114   1          PCON |= 0x80;
- 115   1        TH1 = 111;
- 116   1      }
- 117          
-C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 10:51:03 PAGE 3   
+ 103   2          i++;
+ 104   2        }
+ 105   1       }
+ 106          
+ 107          void Init_UART0(void){
+ 108   1        CKCON |= 0x10;
+ 109   1        TCON |= 0x40;
+ 110   1        TMOD |= 0x20;
+ 111   1        TMOD &= ~ 0xD0;
+ 112   1        SCON0 |= 0x72;
+ 113   1        SCON0 &= ~ 0x81;
+ 114   1        T2CON &= ~ 0x30;
+ 115   1          PCON |= 0x80;
+ 116   1        TH1 = 111;
+ 117   1      }
+C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 12:00:16 PAGE 3   
 
- 118          void Init_SPI(void){
- 119   1        SPI0CFG |= 0xC7;
- 120   1        SPI0CN &= ~0x80;
- 121   1        SPI0CKR = 0xFE;
- 122   1        SPI0CN |= 0x03;
- 123   1        P0MDOUT |= 0x14;
- 124   1        P0MDOUT &= ~0x08;
- 125   1        P2MDOUT |=0x40; 
- 126   1        NSS = 1;
- 127   1      }
- 128          
- 129          void wait_one_sec(void){
- 130   1        unsigned char i=0;
- 131   1        for(i=0;i<100;i++){
- 132   2          fct_tempo(10000);
- 133   2        }
- 134   1      }
- 135          
- 136          void wait_500_ms(void){
- 137   1        unsigned char i=0;
- 138   1        for(i=0;i<50;i++){
- 139   2          fct_tempo(10000);
- 140   2        }
- 141   1      }
- 142          
- 143          char send_data_spi(char c,char enable_cs){
- 144   1        char return_value;
- 145   1        NSS = 0;
- 146   1        SPI0DAT = c;
- 147   1        while((SPI0CN & 0x80) != (0x80)){
- 148   2          // Wait for flag to be set at 0
- 149   2        }
- 150   1        SPI0CN &= ~0x80; // Reset flag
- 151   1        return_value = SPI0DAT;
- 152   1        if(enable_cs>0) {
- 153   2          NSS = 1;
- 154   2        }
- 155   1        return return_value;
- 156   1      }
- 157          
- 158          char send_cmd_adxl(char rw,char mb,char adress,char data_value,char get_data_return){
- 159   1        unsigned char msb = 0;
- 160   1        char return_value = 0;
- 161   1        char temp_value = 0;
- 162   1        if(rw==0){
- 163   2          msb = 0x80; 
- 164   2        }else{
- 165   2          msb = 0;
- 166   2        }
- 167   1        if(mb==1){
- 168   2          msb |= 0x40;
- 169   2        }
- 170   1        msb |= adress;
- 171   1        send_data_spi(msb,0);
- 172   1        if(data_value!=0){
- 173   2          temp_value = send_data_spi(data_value,0);
- 174   2        }
- 175   1        if(get_data_return>0){
- 176   2          SPI0DAT = 0xFF; // Send fake data on SPI bus
- 177   2          while((SPI0CN & 0x80) != (0x80)){
- 178   3            // Wait for flag to be set at 0
- 179   3          }
-C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 10:51:03 PAGE 4   
+ 118          
+ 119          void Init_SPI(void){
+ 120   1        SPI0CFG |= 0xC7;
+ 121   1        SPI0CN &= ~0x80;
+ 122   1        SPI0CKR = 0xFE;
+ 123   1        SPI0CN |= 0x03;
+ 124   1        P0MDOUT |= 0x14;
+ 125   1        P0MDOUT &= ~0x08;
+ 126   1        P2MDOUT |=0x40; 
+ 127   1        NSS = 1;
+ 128   1      }
+ 129          
+ 130          void wait_one_sec(void){
+ 131   1        unsigned char i=0;
+ 132   1        for(i=0;i<100;i++){
+ 133   2          fct_tempo(10000);
+ 134   2        }
+ 135   1      }
+ 136          
+ 137          void wait_500_ms(void){
+ 138   1        unsigned char i=0;
+ 139   1        for(i=0;i<50;i++){
+ 140   2          fct_tempo(10000);
+ 141   2        }
+ 142   1      }
+ 143          
+ 144          char send_data_spi(char c,char enable_cs){
+ 145   1        char return_value;
+ 146   1        NSS = 0;
+ 147   1        SPI0DAT = c;
+ 148   1        while((SPI0CN & 0x80) != (0x80)){
+ 149   2          // Wait for flag to be set at 0
+ 150   2        }
+ 151   1        SPI0CN &= ~0x80; // Reset flag
+ 152   1        return_value = SPI0DAT;
+ 153   1        if(enable_cs>0) {
+ 154   2          NSS = 1;
+ 155   2        }
+ 156   1        return return_value;
+ 157   1      }
+ 158          
+ 159          char send_cmd_adxl(char rw,char mb,char adress,char data_value,char get_data_return){
+ 160   1        unsigned char msb = 0;
+ 161   1        char return_value = 0;
+ 162   1        char temp_value = 0;
+ 163   1        if(rw==0){
+ 164   2          msb = 0x80; 
+ 165   2        }else{
+ 166   2          msb = 0;
+ 167   2        }
+ 168   1        if(mb==1){
+ 169   2          msb |= 0x40;
+ 170   2        }
+ 171   1        msb |= adress;
+ 172   1        send_data_spi(msb,0);
+ 173   1        if(data_value!=0){
+ 174   2          temp_value = send_data_spi(data_value,0);
+ 175   2        }
+ 176   1        if(get_data_return>0){
+ 177   2          SPI0DAT = 0xFF; // Send fake data on SPI bus
+ 178   2          while((SPI0CN & 0x80) != (0x80)){
+ 179   3            // Wait for flag to be set at 0
+C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 12:00:16 PAGE 4   
 
- 180   2          SPI0CN &= ~0x80; // Reset flag
- 181   2          return_value = SPI0DAT;
- 182   2        }else{
- 183   2          return_value = temp_value;
- 184   2        }
- 185   1      
- 186   1        NSS = 1;
- 187   1        return return_value;
- 188   1      }
- 189          
- 190          char get_data_adxl(char adress){
- 191   1        return send_cmd_adxl(0,0,adress,0,1);
- 192   1      }
- 193          
- 194          char read_register_adxl(char addr){
- 195   1        char return_value = 0;
- 196   1        char addr_tram = 0x80; // R/W bit set to 1
- 197   1        addr_tram |= addr; 
- 198   1        NSS = 0;
- 199   1        // 1st transaction => send addr_tram to ADXL
- 200   1        SPI0DAT = addr_tram;
- 201   1        while((SPI0CN & 0x80) != (0x80)){
- 202   2          // Wait for flag to be set at 0
- 203   2        }
- 204   1        SPI0CN &= ~0x80; // Reset flag
- 205   1        //2nd transaction=> receive data
- 206   1        SPI0DAT=0xAA;
- 207   1        while((SPI0CN & 0x80) != (0x80)){
- 208   2          // Wait for flag to be set at 0
- 209   2        }
- 210   1        SPI0CN &= ~0x80; // Reset flag
- 211   1        return_value = SPI0DAT;
- 212   1        NSS = 1;
- 213   1        return return_value;
- 214   1      }
- 215          
- 216          void write_register_adxl(char addr,char data_value){
- 217   1        char addr_tram = addr;
- 218   1        addr_tram &= ~0x80; // Force R/W bit to 0
- 219   1        NSS = 0;
- 220   1      
- 221   1        // 1st transaction => send addr_tram to ADXL
- 222   1        SPI0DAT = addr_tram;
- 223   1        while((SPI0CN & 0x80) != (0x80)){
- 224   2          // Wait for flag to be set at 0
- 225   2        }
- 226   1        SPI0CN &= ~0x80; // Reset flag
- 227   1      
- 228   1        //2nd transaction=> send data
- 229   1        SPI0DAT=data_value;
- 230   1        while((SPI0CN & 0x80) != (0x80)){
- 231   2          // Wait for flag to be set at 0
- 232   2        }
- 233   1        SPI0CN &= ~0x80; // Reset flag
- 234   1      
- 235   1        NSS = 1;
- 236   1      }
- 237          
- 238          void Init_ADXL(void){
- 239   1        fct_tempo(1100); // Wait 1,1 ms
- 240   1        write_register_adxl(DATA_FORMAT,0x0b);
- 241   1        write_register_adxl(POWER_CTL,0x08);
-C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 10:51:03 PAGE 5   
+ 180   3          }
+ 181   2          SPI0CN &= ~0x80; // Reset flag
+ 182   2          return_value = SPI0DAT;
+ 183   2        }else{
+ 184   2          return_value = temp_value;
+ 185   2        }
+ 186   1      
+ 187   1        NSS = 1;
+ 188   1        return return_value;
+ 189   1      }
+ 190          
+ 191          char get_data_adxl(char adress){
+ 192   1        return send_cmd_adxl(0,0,adress,0,1);
+ 193   1      }
+ 194          
+ 195          char read_register_adxl(char addr){
+ 196   1        char return_value = 0;
+ 197   1        char addr_tram = 0x80; // R/W bit set to 1
+ 198   1        addr_tram |= addr; 
+ 199   1        NSS = 0;
+ 200   1        // 1st transaction => send addr_tram to ADXL
+ 201   1        SPI0DAT = addr_tram;
+ 202   1        while((SPI0CN & 0x80) != (0x80)){
+ 203   2          // Wait for flag to be set at 0
+ 204   2        }
+ 205   1        SPI0CN &= ~0x80; // Reset flag
+ 206   1        //2nd transaction=> receive data
+ 207   1        SPI0DAT=0xAA;
+ 208   1        while((SPI0CN & 0x80) != (0x80)){
+ 209   2          // Wait for flag to be set at 0
+ 210   2        }
+ 211   1        SPI0CN &= ~0x80; // Reset flag
+ 212   1        return_value = SPI0DAT;
+ 213   1        NSS = 1;
+ 214   1        return return_value;
+ 215   1      }
+ 216          
+ 217          void write_register_adxl(char addr,char data_value){
+ 218   1        char addr_tram = addr;
+ 219   1        addr_tram &= ~0x80; // Force R/W bit to 0
+ 220   1        NSS = 0;
+ 221   1      
+ 222   1        // 1st transaction => send addr_tram to ADXL
+ 223   1        SPI0DAT = addr_tram;
+ 224   1        while((SPI0CN & 0x80) != (0x80)){
+ 225   2          // Wait for flag to be set at 0
+ 226   2        }
+ 227   1        SPI0CN &= ~0x80; // Reset flag
+ 228   1      
+ 229   1        //2nd transaction=> send data
+ 230   1        SPI0DAT=data_value;
+ 231   1        while((SPI0CN & 0x80) != (0x80)){
+ 232   2          // Wait for flag to be set at 0
+ 233   2        }
+ 234   1        SPI0CN &= ~0x80; // Reset flag
+ 235   1      
+ 236   1        NSS = 1;
+ 237   1      }
+ 238          
+ 239          void Init_ADXL(void){
+ 240   1        fct_tempo(1100); // Wait 1,1 ms
+ 241   1        write_register_adxl(DATA_FORMAT,0x0b);
+C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 12:00:16 PAGE 5   
 
- 242   1        write_register_adxl(INT_ENABLE,0x80);
- 243   1      }
- 244          
- 245          void create_xyz_adxl_vector(char data_value[6], int* x, int* y, int* z){
- 246   1        *x = data_value[1]<<8;
- 247   1        *x |= data_value[0];
- 248   1        *y = data_value[3]<<8;
- 249   1        *y |= data_value[2];
- 250   1        *z = data_value[5]<<8;
- 251   1        *z |= data_value[4];
- 252   1      }
- 253          
+ 242   1        write_register_adxl(POWER_CTL,0x08);
+ 243   1        write_register_adxl(INT_ENABLE,0x80);
+ 244   1      }
+ 245          
+ 246          void create_xyz_adxl_vector(char data_value[6], int* x, int* y, int* z){
+ 247   1        *x = data_value[1]<<8;
+ 248   1        *x |= data_value[0];
+ 249   1        *y = data_value[3]<<8;
+ 250   1        *y |= data_value[2];
+ 251   1        *z = data_value[5]<<8;
+ 252   1        *z |= data_value[4];
+ 253   1      }
  254          
  255          
- 256          //------------------------------------------------------------------------------------
- 257          // MAIN Routine
- 258          //------------------------------------------------------------------------------------
- 259          void main (void)
- 260          {
- 261   1        unsigned char bcl=0;
- 262   1        unsigned char data_axdl[6];
- 263   1        int x = 0;
- 264   1        int y = 0;
- 265   1        int z = 0;
- 266   1        unsigned char data_x_string[3];
- 267   1        unsigned char data_y_string[3];
- 268   1        unsigned char data_z_string[3];
- 269   1        Init_Device();
- 270   1        Init_XBar();
- 271   1        Init_SPI();
- 272   1        Init_ADXL();
- 273   1        Init_UART0();
- 274   1        while(1){
- 275   2          clear_data_tab(data_axdl,6);
- 276   2          clear_data_tab(data_x_string,3);
- 277   2          clear_data_tab(data_y_string,3);
- 278   2          clear_data_tab(data_z_string,3);
- 279   2          bcl=0;
- 280   2          
- 281   2          data_axdl[0] = read_register_adxl(DATAX0);
- 282   2          data_axdl[1]  = read_register_adxl(DATAX1);
- 283   2          data_axdl[2]  = read_register_adxl(DATAY0);
- 284   2          data_axdl[3]  = read_register_adxl(DATAY1);
- 285   2          data_axdl[4]  = read_register_adxl(DATAZ0);
- 286   2          data_axdl[5]  = read_register_adxl(DATAZ1);
- 287   2      
- 288   2          create_xyz_adxl_vector(data_axdl,&x,&y,&z);
- 289   2      
- 290   2          itoa(x,data_x_string);
- 291   2          itoa(y,data_y_string);
- 292   2          itoa(z,data_z_string);
- 293   2      
- 294   2          send_tab_char_uart0(data_x_string,3);
- 295   2          send_char_uart0(' ');
- 296   2          send_char_uart0('-');
- 297   2          send_char_uart0(' ');
- 298   2      
- 299   2          send_tab_char_uart0(data_y_string,3);
- 300   2          send_char_uart0(' ');
- 301   2          send_char_uart0('-');
- 302   2          send_char_uart0(' ');
- 303   2      
-C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 10:51:03 PAGE 6   
+ 256          
+ 257          //------------------------------------------------------------------------------------
+ 258          // MAIN Routine
+ 259          //------------------------------------------------------------------------------------
+ 260          void main (void)
+ 261          {
+ 262   1        unsigned char bcl=0;
+ 263   1        unsigned char data_axdl[6];
+ 264   1        int x = 0;
+ 265   1        int y = 0;
+ 266   1        int z = 0;
+ 267   1        unsigned char data_x_string[3];
+ 268   1        unsigned char data_y_string[3];
+ 269   1        unsigned char data_z_string[3];
+ 270   1        Init_Device();
+ 271   1        Init_XBar();
+ 272   1        Init_SPI();
+ 273   1        Init_ADXL();
+ 274   1        Init_UART0();
+ 275   1        while(1){
+ 276   2          clear_data_tab(data_axdl,6);
+ 277   2          clear_data_tab(data_x_string,3);
+ 278   2          clear_data_tab(data_y_string,3);
+ 279   2          clear_data_tab(data_z_string,3);
+ 280   2          bcl=0;
+ 281   2          
+ 282   2          data_axdl[0] = read_register_adxl(DATAX0);
+ 283   2          data_axdl[1]  = read_register_adxl(DATAX1);
+ 284   2          data_axdl[2]  = read_register_adxl(DATAY0);
+ 285   2          data_axdl[3]  = read_register_adxl(DATAY1);
+ 286   2          data_axdl[4]  = read_register_adxl(DATAZ0);
+ 287   2          data_axdl[5]  = read_register_adxl(DATAZ1);
+ 288   2      
+ 289   2          create_xyz_adxl_vector(data_axdl,&x,&y,&z);
+ 290   2      
+ 291   2          itoa(x,data_x_string);
+ 292   2          itoa(y,data_y_string);
+ 293   2          itoa(z,data_z_string);
+ 294   2      
+ 295   2          send_tab_char_uart0(data_x_string);
+ 296   2          send_char_uart0(' ');
+ 297   2          send_char_uart0('-');
+ 298   2          send_char_uart0(' ');
+ 299   2      
+ 300   2          send_tab_char_uart0(data_y_string);
+ 301   2          send_char_uart0(' ');
+ 302   2          send_char_uart0('-');
+ 303   2          send_char_uart0(' ');
+C51 COMPILER V9.56.0.0   MAIN                                                              10/10/2018 12:00:16 PAGE 6   
 
- 304   2          send_tab_char_uart0(data_z_string,3);
- 305   2      
- 306   2          send_char_uart0('\r');
- 307   2          send_char_uart0('\n');
- 308   2          wait_500_ms();
- 309   2      
- 310   2        }
- 311   1      }
- 312          
- 313           
- 314          
- 315           
+ 304   2      
+ 305   2          send_tab_char_uart0(data_z_string);
+ 306   2      
+ 307   2          send_char_uart0('\r');
+ 308   2          send_char_uart0('\n');
+ 309   2          wait_500_ms();
+ 310   2      
+ 311   2        }
+ 312   1      }
+ 313          
+ 314           
+ 315          
+ 316           
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1162    ----
+   CODE SIZE        =   1142    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----      68
+   DATA SIZE        =   ----      66
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
